@@ -2,12 +2,16 @@
 const exp = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+require('dotenv').config()
+
 const app = exp()
 app.use(exp.json())
 app.use(cors())
-app.listen(7000,()=>console.log("listening at port 7000"))
 
-mongoose.connect('mongodb://localhost:27017/DTI').then(()=>console.log('connected db')).catch(()=>console.log("error connecting db"))
+let PORT=process.env.PORT || 7000
+app.listen(PORT,()=>console.log("listening at port "+PORT))
+
+mongoose.connect('mongodb+srv://'+process.env.USER+':'+process.env.PSSWD+'@cluster0.vhe6w3m.mongodb.net/DTI').then(()=>console.log('connected db')).catch(()=>console.log("error connecting db"))
 let HospitalList = mongoose.model('HospitalList',new mongoose.Schema({ //list of all hospitals enrolled
     name:String , address:String, pincode:Number ,addresslink:String,hospitalid:String
 }))
@@ -21,9 +25,11 @@ let UserAccountList = mongoose.model('UserAccountList',new mongoose.Schema({
     name:String, phone:Number, uid:String, password:String, bloodgroup:String, age:Number, address:String, pincode:Number, gender:String
 }))
 
-// app.get('/',(req,res)=>{
-//     res.send('<h1>hello</h1>')
-// })
+app.get('/',(req,res)=>{
+    res.send(`<h1>hello. this is the server for DTI</h1>
+    <a href='https://github.com/Sai-Charan-Bandari/DTI'>Checkout DTI site</a>
+    `)
+})
 
 //CREATION OF NEW ACCOUNT FOR USER
 app.post('/user-account',async (req,res)=>{
